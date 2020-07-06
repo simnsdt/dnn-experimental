@@ -1,7 +1,7 @@
 import torch
 import pytorchcv
-import tensorflow as tf
 from pytorchcv import model_provider
+import tensorflow as tf
 import os
 
 def representative_data_gen():
@@ -24,16 +24,18 @@ def representative_data_gen():
     image = tf.expand_dims(image, 0)
     yield [image]
 
-def onnx2pb(inputONNX, outputPB):
-  model = model_provider._models['vgg19'](pretrained=True)
+def dlModel(modelName, outputONNX):
+  model = model_provider._models[modelName](pretrained=True)
   # This is for standard image net
   x = torch.randn(1, 3, 224, 224, requires_grad=True)
   torch_out = model(x)
-  torch.onnx.export(model, x, inputONNX, export_params=True, input_names=['input'], output_names=['output'])
-  print("CONVERTING ONNX TO PB VIA COMMAND LINE ")
+  torch.onnx.export(model, x, outputONNX, export_params=True, input_names=['input'], output_names=['output'])
+
+def onnx2pb(inputONNX, outputPB):
+  print("CONVERTING ONNX TO PB VIA COMMAND LINE...")
   cmd = "onnx-tf convert -i {} -o {}".format(inputONNX, outputPB)
   os.system(cmd)
-  print("DONE CONVERTING ONNX TO PB ")
+  print("DONE CONVERTING ONNX TO PB!")
 
 def pb2tflite_quant(inputPB,outputTFLite):
   # Create converter:
@@ -48,8 +50,17 @@ def pb2tflite_quant(inputPB,outputTFLite):
   open(outputTFLite, 'wb').write(tf_lite_model)
 
 def main():
-  onnx2pb('torch_vgg19.onnx', 'torch_vgg19.pb')
-  pb2tflite_quant('torch_vgg19.pb','vgg19_tensorFlow.tflite')
+
+  # Filenames:
+  onnxFilename = 'torch_vgg19.onnx'
+  pbFilename = 'torch_vgg19.pb'
+  tfliteFilename = 'vgg19_tensorFLow.tflite'
+
+  # Conversion Pipeline:
+  dlModel('vgg19', onnxFilename)
+  onnx2pb(onnxFilename, pbFilename)
+  pb2tflite_quant(pbFilename, tfliteFilename)
+  
 
 if __name__ == "__main__":
     main()
