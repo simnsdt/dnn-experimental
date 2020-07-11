@@ -1,9 +1,12 @@
+import os
 import subprocess
 from openvino.inference_engine import IECore
 
 def prepare(name):
     filename = name + ".onnx"
-    subprocess.call("$HOME/intel/openvino/delpoyment_tools/model_optimizer/mo.py", "--input_model", name+".onnx")
+    modelOptimizer = os.path.expandvars("$HOME/intel/openvino/deployment_tools/model_optimizer/mo.py")
+
+    subprocess.run([modelOptimizer, "--input_model", filename])
 
 def deploy():
     ie = IECore()
