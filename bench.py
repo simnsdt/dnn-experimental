@@ -1,4 +1,4 @@
-from keras2tpu import prepare
+import keras2tpu
 from onnx2ncs import prepare
 from onnx2ncs import deploy
 
