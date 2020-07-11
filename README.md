@@ -10,6 +10,8 @@ Pipeline for converting, deploying, executing and benchmarking different DNN-Mod
 * edgetpu_compiler installed according to google docs
 * OpenVINO Toolkit installed in default path ~/intel/openvino*
 * OpenVINO Toolkit initialized (source ~/intel/openvino/bin/setupvars.sh)
+
+
 Tested on Ubuntu 18.04 LTS
 ## How to use:
 > python3 bench.py
