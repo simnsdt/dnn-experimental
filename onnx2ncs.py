@@ -8,18 +8,18 @@ def prepare(name):
 
     subprocess.run([modelOptimizer, "--input_model", filename])
 
-def deploy():
-    # TODO: Implement benchmarking
+def deploy(device):
+    # TODO: Implement inference/benchmarking
     ie = IECore()
 
     # Model paths:
-    model_xml = "$HOME/intel/openvino/deployment_tools/model_optimizer/model.xml"
-    model_bin = "$HOME/intel/openvino/deployment_tools/model_optimizer/model.bin"
+    model_xml = os.path.expandvars("$HOME/intel/openvino/deployment_tools/model_optimizer/model.xml")
+    model_bin = os.path.expandvars("$HOME/intel/openvino/deployment_tools/model_optimizer/model.bin")
 
     print("Loading model...")
     net = ie.read_network(model = model_xml, weights=model_bin)
 
-    print("Deploying model to NCS...")
-    exec_net = ie.load_network(network=net, device_name="MYRIAD")
+    print("Deploying model to {}...".format(device))
+    exec_net = ie.load_network(network=net, device_name=device)
 
 
