@@ -1,6 +1,6 @@
 # Benchmarking Pipeline:
 
-Pipeline for coverting, deploying, executing and benchmarking different DNN-Models on CPU, Intel NCS or Coral TPU Dev Board.
+Pipeline for converting, deploying, executing and benchmarking different DNN-Models on CPU, Intel NCS or Coral TPU Dev Board.
 
 ## Requirements:
 * *.onnx file for selected model placed next to bench.py
