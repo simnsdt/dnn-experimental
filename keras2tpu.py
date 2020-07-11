@@ -1,3 +1,4 @@
+import subprocess
 import tensorflow as tf
 import os
 
@@ -65,3 +66,8 @@ def prepare(name):
     # Save quantized model:
     with open(name+"_quant.tflite", 'wb') as f:
         f.write(tflite_quant_model)
+
+def deploy(name):
+    # TODO: Copy to TPU
+    # TODO: Implement benchmark
+    subprocess.run(["edgetpu_compiler",name + "_quant.tflite"])

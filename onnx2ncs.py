@@ -9,6 +9,7 @@ def prepare(name):
     subprocess.run([modelOptimizer, "--input_model", filename])
 
 def deploy():
+    # TODO: Implement benchmarking
     ie = IECore()
 
     # Model paths:
