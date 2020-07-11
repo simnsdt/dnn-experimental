@@ -10,7 +10,7 @@ def main():
     # edgetpu_compiler installed according to google docs
     # OpenVINO Toolkit installed in default path ~/intel/openvino*
     # OpenVINO Toolkit initialized (source ~/intel/openvino/bin/setupvars.sh)
-
+    # Tested on Ubuntu 18.04 LTS
 
     # TODO: Implement argument parsing for model names, e.g. call python3 bench.py --model ResNet50
     model1 = "ResNet50"
