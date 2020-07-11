@@ -4,7 +4,9 @@ import os
 
 
 def prepare(name):
-
+    # Loads pretrained keras model and converts it to full int8 *.tflite model.
+    # The quantized model is then saved as [modelname]_quant.tflite.
+    
     def _keras2tflite_quant():
         converter = tf.lite.TFLiteConverter.from_keras_model(kerasModel)
         # This enables quantization
@@ -18,12 +20,12 @@ def prepare(name):
         # And this sets the representative dataset so we can quantize the activations
         print("Creating representative dataset for quantizing...")
         converter.representative_dataset = _representative_data_gen
-        print("Quantizing model to int8....")
+        print("Quantizing pretrained keras model to int8....")
         tflite_quant_model = converter.convert()
         return tflite_quant_model
 
     def _dlModel():
-        print("Loading keras model "+name)
+        print("Trying to load pretrained keras model ({})...".format(name))
         IMG_SHAPE = (224, 224, 3)
         if (name == "ResNet50"):
             model = tf.keras.applications.ResNet50(input_shape=IMG_SHAPE,
@@ -34,7 +36,7 @@ def prepare(name):
                                                         include_top=False, 
                                                         weights='imagenet')
         else:
-            print("Model {} not supported!".format(name))
+            print("Model name {} not supported! Aborting.".format(name))
             exit()
 
         model.trainable = False
@@ -68,6 +70,10 @@ def prepare(name):
         f.write(tflite_quant_model)
 
 def deploy(name):
-    # TODO: Copy to TPU
-    # TODO: Implement benchmark
+    # Compiles the model for TPU.
+    # Saves the compiled model according to edgetpu_compiler default settings (*_edgtpu.tflite).
+
+    # TODO: Implement copy to TPU
+    # TODO: Implement inference/benchmarking
+    
     subprocess.run(["edgetpu_compiler",name + "_quant.tflite"])
