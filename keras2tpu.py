@@ -9,15 +9,11 @@ def prepare(name):
     
     def _keras2tflite_quant():
         converter = tf.lite.TFLiteConverter.from_keras_model(kerasModel)
-        # This enables quantization
         converter.optimizations = [tf.lite.Optimize.DEFAULT]
         converter.target_spec.supported_types = [tf.int8]
-        # This ensures that if any ops can't be quantized, the converter throws an error
         converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
-        # These set the input and output tensors to uint8 (added in r2.3)
         converter.inference_input_type = tf.int8
         converter.inference_output_type = tf.int8
-        # And this sets the representative dataset so we can quantize the activations
         print("Creating representative dataset for quantizing...")
         converter.representative_dataset = _representative_data_gen
         print("Quantizing pretrained keras model to int8....")
