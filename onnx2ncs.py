@@ -7,17 +7,17 @@ def prepare(name):
     filename = name + ".onnx"
     modelOptimizer = os.path.expandvars("$HOME/intel/openvino/deployment_tools/model_optimizer/mo.py")
 
-    subprocess.run([modelOptimizer, "--input_model", filename])
+    subprocess.run([modelOptimizer, "--input_model", filename, "--output_dir", "./"])
 
-def deploy(device):
+def deploy(name, device):
     # Loads optimized model to selected device.
 
     # TODO: Implement inference/benchmarking
     ie = IECore()
 
     # Model paths:
-    model_xml = os.path.expandvars("$HOME/intel/openvino/deployment_tools/model_optimizer/model.xml")
-    model_bin = os.path.expandvars("$HOME/intel/openvino/deployment_tools/model_optimizer/model.bin")
+    model_xml = name+".xml"
+    model_bin = name+".bin"
 
     print("Loading optimized ONNX model...")
     net = ie.read_network(model = model_xml, weights=model_bin)

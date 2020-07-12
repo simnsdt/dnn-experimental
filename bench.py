@@ -13,7 +13,7 @@ def main():
 
     # NCS Pipeline:
     onnx2ncs.prepare(model1)
-    onnx2ncs.deploy("CPU")
+    onnx2ncs.deploy(model1,"CPU")
     #onnx2ncs.deploy("MYRIAD")
 
     print("FINISHED SUCCESSFULLY!")
