@@ -14,8 +14,7 @@ Experimental pipeline for converting, deploying, executing and benchmarking diff
 
 ## Requirements Coral Dev Board
 * Accessible via mdt - follow instructions here: https://coral.ai/docs/dev-board/get-started/
-  * Check via:
-    > mdt shell
+  * Check via: mdt shell
 * TFLite runtime 2.1.0 installed on dev board (should be the case if instructions were followed correctly)
 
 ## How to use
