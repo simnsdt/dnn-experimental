@@ -2,7 +2,6 @@ import os
 import subprocess
 from openvino.inference_engine import IECore
 
-
 def prepare(modelName):
 # Calls model optimizer to convert *.onnx model to optimized *.bin/*.xml files.
     def _dlModel():
@@ -22,7 +21,7 @@ def prepare(modelName):
 def bench(modelName, device, batch_size):
     model_xml = modelName+".xml"
     sample_jpg = "sample.jpg"
-    classification =  os.path.expandvars("$HOME/intel/openvino/inference_engine/samples/python/classification_sample/classification_sample.py")
+    classification =  os.path.expandvars("./ncs/classification_sample.py")
     for i in range(0,batch_size):
         subprocess.run(["python3", classification, "-m", model_xml, "-i", sample_jpg, "-d", device])
 
