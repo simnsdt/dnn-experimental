@@ -71,7 +71,6 @@ def compile(name):
     # Compiles the model for TPU.
     # Saves the compiled model according to edgetpu_compiler default settings (*_edgtpu.tflite).
 
-    # TODO: Implement copy to TPU
     # TODO: Implement inference/benchmarking
     subprocess.run(["edgetpu_compiler", name + "_quant.tflite"])
 
