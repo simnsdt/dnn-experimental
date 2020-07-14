@@ -22,7 +22,6 @@ def bench(modelName, device, batch_size):
     model_xml = modelName+".xml"
     sample_jpg = "sample.jpg"
     classification =  os.path.expandvars("./ncs/classification_sample.py")
-    for i in range(0,batch_size):
-        subprocess.run(["python3", classification, "-m", model_xml, "-i", sample_jpg, "-d", device])
+    subprocess.run(["python3", classification, "-m", model_xml, "-i", sample_jpg, "-d", device, "-b", str(batch_size)])
 
 

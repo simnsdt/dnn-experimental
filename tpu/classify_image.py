@@ -106,11 +106,15 @@ def main():
   print('----INFERENCE TIME----')
   print('Note: The first inference on Edge TPU is slow because it includes',
         'loading the model into Edge TPU memory.')
+  times_txt = "ncs-times-TPU.txt"
   for _ in range(args.count):
     start = time.perf_counter()
     interpreter.invoke()
-    inference_time = time.perf_counter() - start
-    print('%.1fms' % (inference_time * 1000))
+    inference_time = (time.perf_counter() - start)*1000
+    text_file = open(times_txt, "a")
+    text_file.write(str(inference_time)+'\n')
+    text_file.close()
+    print("Inference #{} on NCS done...".format(_))
 
 if __name__ == '__main__':
   main()

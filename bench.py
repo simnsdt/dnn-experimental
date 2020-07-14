@@ -11,12 +11,12 @@ def main():
     keras2tpu.prepare(model1)
     keras2tpu.compile(model1)
     keras2tpu.copy(model1)
-    keras2tpu.bench(model1)
+    keras2tpu.bench(model1, 2)
 
     # NCS Pipeline:
     onnx2ncs.prepare(model1)
-    onnx2ncs.bench(model1, "CPU", 2)
-    # onnx2ncs.deploy("MYRIAD")
+    onnx2ncs.bench(model1, "CPU", 5)
+    onnx2ncs.bench(model1,"MYRIAD",5)
 
     print("FINISHED SUCCESSFULLY!")
 

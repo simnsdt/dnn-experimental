@@ -44,6 +44,7 @@ def build_argparser():
                       default="CPU", type=str)
     args.add_argument("--labels", help="Optional. Path to a labels mapping file", default=None, type=str)
     args.add_argument("-nt", "--number_top", help="Optional. Number of top results", default=10, type=int)
+    args.add_argument("-b","--batchsize" ,help="Optional. Number of inference runs", default=1, type=int)
 
     return parser
 
@@ -97,42 +98,20 @@ def main():
     log.info("Loading model to the plugin")
     exec_net = ie.load_network(network=net, device_name=args.device)
 
-    # Start sync inference
+    # Start sync inference with time measurement
     log.info("Starting inference in synchronous mode")
-    start = time.perf_counter()
-    res = exec_net.infer(inputs={input_blob: images})
-    inference_time = (time.perf_counter() - start)*1000
-    text_file = open("ncs-times.txt", "a")
-    text_file.write(str(inference_time)+'\n')
-    text_file.close()
-    # Processing output blob
-    log.info("Processing output blob")
-    res = res[out_blob]
-    log.info("Top {} results: ".format(args.number_top))
-    if args.labels:
-        with open(args.labels, 'r') as f:
-            labels_map = [x.split(sep=' ', maxsplit=1)[-1].strip() for x in f]
-    else:
-        labels_map = None
-    classid_str = "classid"
-    probability_str = "probability"
-    for i, probs in enumerate(res):
-        probs = np.squeeze(probs)
-        top_ind = np.argsort(probs)[-args.number_top:][::-1]
-        print("Image {}\n".format(args.input[i]))
-        print(classid_str, probability_str)
-        print("{} {}".format('-' * len(classid_str), '-' * len(probability_str)))
-        for id in top_ind:
-            det_label = labels_map[id] if labels_map else "{}".format(id)
-            label_length = len(det_label)
-            space_num_before = (len(classid_str) - label_length) // 2
-            space_num_after = len(classid_str) - (space_num_before + label_length) + 2
-            space_num_before_prob = (len(probability_str) - len(str(probs[id]))) // 2
-            print("{}{}{}{}{:.7f}".format(' ' * space_num_before, det_label,
-                                          ' ' * space_num_after, ' ' * space_num_before_prob,
-                                          probs[id]))
-        print("\n")
-    log.info("This sample is an API example, for any performance measurements please use the dedicated benchmark_app tool\n")
+    times_txt = "ncs-times-"+args.device+".txt"
+    if os.path.exists(times_txt):
+        os.remove(times_txt)
+    for i in range(0, args.batchsize):
+        start = time.perf_counter()
+        exec_net.infer(inputs={input_blob: images})
+        inference_time = (time.perf_counter() - start)*1000
+        text_file = open(times_txt, "a")
+        text_file.write(str(inference_time)+'\n')
+        text_file.close()
+        print("Inference #{} on NCS done...".format(i))
+
 
 if __name__ == '__main__':
     sys.exit(main() or 0)
