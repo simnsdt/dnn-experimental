@@ -89,4 +89,7 @@ def bench(modelName,batchSize):
     tfliteFilename = modelName+"_quant_edgetpu.tflite"
     
     subprocess.run(["mdt", "exec", "python3 ~/classify_image.py --model ~/{} --input ~/sample.jpg -c {}".format(tfliteFilename, batchSize)])
-        
+    
+def retrieveResults():
+    subprocess.run(["mdt", "pull", "results-TPU.txt", "./"])
+    

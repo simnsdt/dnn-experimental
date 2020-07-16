@@ -100,7 +100,7 @@ def main():
 
     # Start sync inference with time measurement
     log.info("Starting inference in synchronous mode")
-    times_txt = "ncs-times-"+args.device+".txt"
+    times_txt = "results-"+args.device+".txt"
     if os.path.exists(times_txt):
         os.remove(times_txt)
     for i in range(0, args.batchsize):
@@ -110,7 +110,7 @@ def main():
         text_file = open(times_txt, "a")
         text_file.write(str(inference_time)+'\n')
         text_file.close()
-        print("Inference #{} on NCS done...".format(i))
+        print("Inference #{} on {} done...".format(i, args.device))
 
 
 if __name__ == '__main__':

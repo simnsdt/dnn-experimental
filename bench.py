@@ -5,18 +5,18 @@ def main():
     # Loads models, converts them and handles deployment on specific hardware.
 
     # TODO: Implement argument parsing for model names, e.g. call python3 bench.py --model ResNet50
-    model1 = "ResNet50"
-    model2 = "VGG19"
+    modelName = "ResNet50"
     # TPU Pipeline:
-    keras2tpu.prepare(model1)
-    keras2tpu.compile(model1)
-    keras2tpu.copy(model1)
-    keras2tpu.bench(model1, 2)
+    keras2tpu.prepare(modelName)
+    keras2tpu.compile(modelName)
+    keras2tpu.copy(modelName)
+    keras2tpu.bench(modelName, 50)
+    keras2tpu.retrieveResults()
 
     # NCS Pipeline:
-    onnx2ncs.prepare(model1)
-    onnx2ncs.bench(model1, "CPU", 5)
-    onnx2ncs.bench(model1,"MYRIAD",5)
+    onnx2ncs.prepare(modelName)
+    onnx2ncs.bench(modelName, "CPU", 50)
+    onnx2ncs.bench(modelName,"MYRIAD",50)
 
     print("FINISHED SUCCESSFULLY!")
 
