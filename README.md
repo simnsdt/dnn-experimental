@@ -19,7 +19,10 @@ Experimental pipeline for converting, deploying, executing and benchmarking diff
 
 ## How to use
 > git clone https://github.com/simnsdt/dnn-experimental.git
+> cd dnn-experimental
+> ./runBenchmark.sh
+Modify batch size and model in runBenchmark.sh
+Supported models: ResNet50, VGG19
 
-> python3 bench.py
 
 Tested using Ubuntu 18.04 LTS, Tensorflow 2.0.0b1, Python 3.6.9, OpenVINO Toolkit 2020R3 and the linked documentations.
