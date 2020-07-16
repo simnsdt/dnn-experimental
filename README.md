@@ -18,9 +18,10 @@ Experimental pipeline for converting, deploying, executing and benchmarking diff
 * TFLite runtime 2.1.0 installed on dev board (should be the case if instructions were followed correctly)
 
 ## How to use
-> git clone https://github.com/simnsdt/dnn-experimental.git
-> cd dnn-experimental
-> ./runBenchmark.sh
+1. git clone https://github.com/simnsdt/dnn-experimental.git
+2. cd dnn-experimental
+3. ./runBenchmark.sh
+
 Modify batch size and model in runBenchmark.sh
 Supported models: ResNet50, VGG19
 
