@@ -1,22 +1,33 @@
 import keras2tpu
 import onnx2ncs
+import argparse
 
 def main():
     # Loads models, converts them and handles deployment on specific hardware.
 
-    # TODO: Implement argument parsing for model names, e.g. call python3 bench.py --model ResNet50
-    modelName = "ResNet50"
+    # Parse arguments:
+    parser = argparse.ArgumentParser(description='Runs benchmark for selected model on TPU, VPU and CPU.')
+    parser.add_argument('-m', '--model', help='Name of the model to benchmark.', required=True,type=str)
+    parser.add_argument('-b','--batch_size', help='Number of inferences per device.', default=1, type=int)
+    args = parser.parse_args()
+    
+    modelName = args.model
+    batch_size = args.batch_size
+    if modelName != "ResNet50" and modelName != "VGG19":
+        print("Please select supported model!")
+        exit()
+        
     # TPU Pipeline:
     keras2tpu.prepare(modelName)
     keras2tpu.compile(modelName)
     keras2tpu.copy(modelName)
-    keras2tpu.bench(modelName, 50)
+    keras2tpu.bench(modelName, batch_size)
     keras2tpu.retrieveResults()
 
     # NCS Pipeline:
     onnx2ncs.prepare(modelName)
-    onnx2ncs.bench(modelName, "CPU", 50)
-    onnx2ncs.bench(modelName,"MYRIAD",50)
+    onnx2ncs.bench(modelName, "CPU", batch_size)
+    onnx2ncs.bench(modelName,"MYRIAD",batch_size)
 
     print("FINISHED SUCCESSFULLY!")
 
