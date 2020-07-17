@@ -1,6 +1,4 @@
 # Benchmarking Pipeline
-Work in progress.
-
 Experimental pipeline for converting, deploying, executing and benchmarking different DNN-Models on CPU, Intel NCS or Coral TPU Dev Board.
 
 ## Requirements Host
@@ -22,7 +20,12 @@ Experimental pipeline for converting, deploying, executing and benchmarking diff
 2. cd dnn-experimental
 3. ./runBenchmark.sh
 
-Modify batch size and model in runBenchmark.sh
+## Options
+* You can use NOCOPY=--nocopy (in runBenchmark.sh) to skip copying the prerequisites for the benchmark after the first run. Remember to reactivate it (NOCOPY="") when changing to a model not benchmarked before.
+
+
+* Modify batch size and model in runBenchmark.sh
+
 Supported models: ResNet50, VGG19
 
 
