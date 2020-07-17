@@ -1,28 +1,14 @@
 #!/usr/bin/env python
-"""
- Copyright (C) 2018-2020 Intel Corporation
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
-"""
 from __future__ import print_function
 import sys
+import time
 import os
 import argparse
-import cv2
+
 import numpy as np
-import logging as log
+import cv2
 from openvino.inference_engine import IECore
-import time
+
 
 def build_argparser():
     parser = argparse.ArgumentParser(
@@ -43,38 +29,39 @@ def build_argparser():
 
 
 def main():
-    # Prepare arguments:log
+    # Prepare arguments:
     args = build_argparser().parse_args()
     model_xml = args.model
     model_bin = os.path.splitext(model_xml)[0] + ".bin"
 
-    # Read model:
-    log.info("Creating Inference Engine")
+    # Read model
+    print("Creating Inference Engine")
     ie = IECore()
-    log.info("Loading network files:\n\t{}\n\t{}".format(model_xml, model_bin))
+    print("Loading network files:\n\t{}\n\t{}".format(model_xml, model_bin))
     net = ie.read_network(model=model_xml, weights=model_bin)
 
-    log.info("Preparing input blobs")
+    print("Preparing input blobs")
     input_blob = next(iter(net.inputs))
     out_blob = next(iter(net.outputs))
     net.batch_size = len(args.input)
 
-    # Read and pre-process input images
+    # Read and pre-process input
     n, c, h, w = net.inputs[input_blob].shape
     images = np.ndarray(shape=(n, c, h, w))
     for i in range(n):
         image = cv2.imread(args.input[i])
         if image.shape[:-1] != (h, w):
-            log.warning("Image {} is resized from {} to {}".format(args.input[i], image.shape[:-1], (h, w)))
+            print("Image {} is resized from {} to {}".format(args.input[i], image.shape[:-1], (h, w)))
             image = cv2.resize(image, (w, h))
         image = image.transpose((2, 0, 1))  # Change data layout from HWC to CHW
         images[i] = image
+        
     # Loading model to the plugin
-    log.info("Loading model to the plugin")
+    print("Loading model to the plugin")
     exec_net = ie.load_network(network=net, device_name=args.device)
 
     # Start inference with time measurement
-    log.info("Starting OpenVINO inference...")
+    print("Starting OpenVINO inference...")
     times_txt = "results-"+args.device+"-{}.txt".format(args.batchsize)
     if os.path.exists(times_txt):
         os.remove(times_txt)

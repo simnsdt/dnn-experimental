@@ -3,7 +3,8 @@ import onnx2ncs
 import argparse
 
 def main():
-    # Loads models, converts them and handles deployment on specific hardware.
+    # Benchmarking pipeline which includes loading, converting, 
+    # deploying, infering and measuring of the models.
 
     # Parse arguments:
     parser = argparse.ArgumentParser(description='Runs benchmark for selected model on TPU, VPU and CPU.')
@@ -26,7 +27,7 @@ def main():
     # TPU Pipeline:
     keras2tpu.prepare(modelName)
     keras2tpu.compile(modelName)
-    keras2tpu.copy(modelName)
+    keras2tpu.copyPrerequisites(modelName)
     keras2tpu.bench(modelName, batchSize)
     
     print("FINISHED SUCCESSFULLY!")

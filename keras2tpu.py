@@ -8,6 +8,8 @@ def prepare(name):
     # The quantized model is then saved as [modelname]_quant.tflite.
 
     def _keras2tflite_quant():
+    # Handles quantization to int8
+    
         converter = tf.lite.TFLiteConverter.from_keras_model(kerasModel)
         converter.optimizations = [tf.lite.Optimize.DEFAULT]
         converter.target_spec.supported_types = [tf.int8]
@@ -22,6 +24,8 @@ def prepare(name):
         return tflite_quant_model
 
     def _dlModel():
+    # Loads pretrained keras models
+    
         print("Trying to load pretrained keras model ({})...".format(name))
         IMG_SHAPE = (224, 224, 3)
         if (name == "ResNet50"):
@@ -36,7 +40,7 @@ def prepare(name):
         return model
 
     def _representative_data_gen():
-        # Get sample data:
+    # Gets sample data necessary for quantizing the weights
         _URL = "https://storage.googleapis.com/download.tensorflow.org/example_images/flower_photos.tgz"
         zip_file = tf.keras.utils.get_file(origin=_URL,
                                         fname="flower_photos.tgz",
@@ -68,11 +72,12 @@ def prepare(name):
 def compile(modelName):
 # Compiles the model for TPU.
 # Saves the compiled model according to edgetpu_compiler default settings (*_edgtpu.tflite).
+    
     filename = modelName+"_quant_edgetpu.tflite"
     if not os.path.isfile(filename):
         subprocess.run(["edgetpu_compiler", modelName + "_quant.tflite"])
 
-def copy(modelName):
+def copyPrerequisites(modelName):
 # Copy prerequisites to TPU
     subprocess.run(["mdt", "push", "sample.jpg"])
     subprocess.run(["mdt", "push", "./tpu/classify_image.py"])
@@ -83,10 +88,12 @@ def copy(modelName):
 
 
 def bench(modelName,batchSize):
+# Runs classification and time measurements
     tfliteFilename = modelName+"_quant_edgetpu.tflite"
     
     subprocess.run(["mdt", "exec", "python3 ~/classify_image.py --model ~/{} --input ~/sample.jpg --batch_size {}".format(tfliteFilename, batchSize)])
     
 def retrieveResults(batchSize):
+# Copies results from dev board back to host
     subprocess.run(["mdt", "pull", "results-TPU-{}.txt".format(batchSize), "./"])
     
