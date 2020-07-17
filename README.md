@@ -9,7 +9,7 @@ Experimental pipeline for converting, deploying, executing and benchmarking diff
   * Use OpenVINO Toolkit 2020R3 instead of 2019R1!
 * OpenVINO Toolkit initialized (source ~/intel/openvino/bin/setupvars.sh before running)
 * edgetpu_compiler installed according to https://coral.ai/docs/edgetpu/compiler/
-
+* Both devices (TPU and NCS) have to be connected and accessible from host
 ## Requirements Coral Dev Board
 * Accessible via mdt - follow instructions here: https://coral.ai/docs/dev-board/get-started/
   * Check via: mdt shell
@@ -26,7 +26,7 @@ Experimental pipeline for converting, deploying, executing and benchmarking diff
 
 ## Cleanup
 * ./cleanup.sh
-* Removes all models, results and python cache from host.
+* Use DELETE_MODELS, DELETE_RESULTS, DELETE_CACHE variables to define which files should be deleted.
 
 Supported models: ResNet50, VGG19
 
