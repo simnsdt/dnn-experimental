@@ -82,10 +82,7 @@ def copyPrerequisites(modelName):
     subprocess.run(["mdt", "push", "sample.jpg"])
     subprocess.run(["mdt", "push", "./tpu/classify_image.py"])
     subprocess.run(["mdt", "push", "./tpu/classify.py"])
-    subprocess.run(["mdt", "push", "./tpu/install_requirements.sh"])
     subprocess.run(["mdt", "push", modelName+"_quant_edgetpu.tflite"])
-    subprocess.run(["mdt", "exec", "bash", "./install_requirements.sh"])
-
 
 def bench(modelName,batchSize):
 # Runs classification and time measurements
@@ -95,4 +92,4 @@ def bench(modelName,batchSize):
 def retrieveResults(batchSize):
 # Copies results from dev board back to host
     subprocess.run(["mdt", "pull", "results-TPU-{}.txt".format(batchSize), "./"])
-    
+    subprocess.run(["mdt","exec","rm", "results-TPU-{}.txt".format(batchSize)])
