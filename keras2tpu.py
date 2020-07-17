@@ -68,7 +68,7 @@ def prepare(name):
 def compile(modelName):
 # Compiles the model for TPU.
 # Saves the compiled model according to edgetpu_compiler default settings (*_edgtpu.tflite).
-    filename = modelName+"_edgetpu_quant.tflite"
+    filename = modelName+"_quant_edgetpu.tflite"
     if not os.path.isfile(filename):
         subprocess.run(["edgetpu_compiler", modelName + "_quant.tflite"])
 
@@ -85,7 +85,7 @@ def copy(modelName):
 def bench(modelName,batchSize):
     tfliteFilename = modelName+"_quant_edgetpu.tflite"
     
-    subprocess.run(["mdt", "exec", "python3 ~/classify_image.py --model ~/{} --input ~/sample.jpg -c {}".format(tfliteFilename, batchSize)])
+    subprocess.run(["mdt", "exec", "python3 ~/classify_image.py --model ~/{} --input ~/sample.jpg --batch_size {}".format(tfliteFilename, batchSize)])
     
 def retrieveResults(batchSize):
     subprocess.run(["mdt", "pull", "results-TPU-{}.txt".format(batchSize), "./"])

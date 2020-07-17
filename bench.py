@@ -17,18 +17,18 @@ def main():
         print("Please select supported model!")
         exit()
         
+    
+    # NCS + CPU Pipeline:
+    onnx2ncs.prepare(modelName)
+    onnx2ncs.bench(modelName, "CPU", batchSize)
+    onnx2ncs.bench(modelName,"MYRIAD",batchSize)
+
     # TPU Pipeline:
     keras2tpu.prepare(modelName)
     keras2tpu.compile(modelName)
     keras2tpu.copy(modelName)
     keras2tpu.bench(modelName, batchSize)
-    keras2tpu.retrieveResults(batchSize)
-
-    # NCS Pipeline:
-    onnx2ncs.prepare(modelName)
-    onnx2ncs.bench(modelName, "CPU", batchSize)
-    onnx2ncs.bench(modelName,"MYRIAD",batchSize)
-
+    
     print("FINISHED SUCCESSFULLY!")
 
 
