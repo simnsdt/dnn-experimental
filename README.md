@@ -21,10 +21,12 @@ Experimental pipeline for converting, deploying, executing and benchmarking diff
 3. ./runBenchmark.sh
 
 ## Options
-* You can use NOCOPY=--nocopy (in runBenchmark.sh) to skip copying the prerequisites for the benchmark after the first run. Remember to reactivate it (NOCOPY="") when changing to a model not benchmarked before.
-
-
+* You can use NOCOPY=--nocopy (in runBenchmark.sh) to skip copying the prerequisites for the benchmark after the first run. Remember to reactivate it (NOCOPY=) when changing to a model not benchmarked before.
 * Modify batch size and model in runBenchmark.sh
+
+## Cleanup
+* ./cleanup.sh
+* Removes all models, results and python cache from host.
 
 Supported models: ResNet50, VGG19
 
