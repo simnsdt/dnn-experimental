@@ -90,7 +90,6 @@ def copyPrerequisites(modelName):
 def bench(modelName,batchSize):
 # Runs classification and time measurements
     tfliteFilename = modelName+"_quant_edgetpu.tflite"
-    
     subprocess.run(["mdt", "exec", "python3 ~/classify_image.py --model ~/{} --input ~/sample.jpg --batch_size {}".format(tfliteFilename, batchSize)])
     
 def retrieveResults(batchSize):

@@ -11,7 +11,6 @@ def prepare(modelName):
                 subprocess.run(
                     ["curl", "https://s3.amazonaws.com/download.onnx/models/opset_8/resnet50.tar.gz", "--output", "resnet50.tar.gz"])
                 subprocess.run(["tar", "-xf", "resnet50.tar.gz"])
-                subprocess.run(["tar", "-xf", "vgg19.tar.gz"])
                 subprocess.run(["mv", "resnet50/model.onnx", "./ResNet50.onnx"])
                 subprocess.run(["rm", "-r", "resnet50/", "resnet50.tar.gz"])
             elif modelName == "VGG19":

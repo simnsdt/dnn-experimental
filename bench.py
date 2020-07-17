@@ -10,6 +10,7 @@ def main():
     parser = argparse.ArgumentParser(description='Runs benchmark for selected model on TPU, VPU and CPU.')
     parser.add_argument('-m', '--model', help='Name of the model to benchmark.', required=True,type=str)
     parser.add_argument('-b','--batch_size', help='Number of inferences per device.', default=1, type=int)
+    parser.add_argument('--nocopy', help='Skips copy of prerequisites to TPU. Use when files already copied.', action='store_true')
     args = parser.parse_args()
     
     modelName = args.model
@@ -27,9 +28,10 @@ def main():
     # TPU Pipeline:
     keras2tpu.prepare(modelName)
     keras2tpu.compile(modelName)
-    keras2tpu.copyPrerequisites(modelName)
+    if args.nocopy == False:
+        keras2tpu.copyPrerequisites(modelName)
     keras2tpu.bench(modelName, batchSize)
-    
+    keras2tpu.retrieveResults(batchSize)
     print("FINISHED SUCCESSFULLY!")
 
 
