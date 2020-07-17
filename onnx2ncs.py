@@ -19,10 +19,12 @@ def prepare(modelName):
                 subprocess.run(["tar", "-xf", "vgg19.tar.gz"])
                 subprocess.run(["mv", "vgg19/model.onnx", "./VGG19.onnx"])
                 subprocess.run(["rm", "-r", "vgg19/", "vgg19.tar.gz"])
+  
     filename = modelName + ".onnx"
-    _dlModel()
-    modelOptimizer = os.path.expandvars("$HOME/intel/openvino/deployment_tools/model_optimizer/mo.py")
-    subprocess.run([modelOptimizer, "--input_model", filename, "--output_dir", "./"])
+    if not os.path.isfile(filename):
+        _dlModel()
+        modelOptimizer = os.path.expandvars("$HOME/intel/openvino/deployment_tools/model_optimizer/mo.py")
+        subprocess.run([modelOptimizer, "--input_model", filename, "--output_dir", "./"])
 
 def bench(modelName, device, batch_size):
     model_xml = modelName+".xml"

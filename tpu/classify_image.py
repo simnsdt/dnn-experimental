@@ -29,6 +29,7 @@ r"""Example using TF Lite to classify a given image using an Edge TPU.
 
 import argparse
 import time
+import  os
 
 from PIL import Image
 
@@ -106,7 +107,9 @@ def main():
   print('----INFERENCE TIME----')
   print('Note: The first inference on Edge TPU is slow because it includes',
         'loading the model into Edge TPU memory.')
-  times_txt = "results-TPU.txt"
+  times_txt = "results-TPU-{}.txt".format(args.count)
+  if os.path.exists(times_txt):
+        os.remove(times_txt)
   for _ in range(args.count):
     start = time.perf_counter()
     interpreter.invoke()

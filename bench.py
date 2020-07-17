@@ -12,7 +12,7 @@ def main():
     args = parser.parse_args()
     
     modelName = args.model
-    batch_size = args.batch_size
+    batchSize = args.batch_size
     if modelName != "ResNet50" and modelName != "VGG19":
         print("Please select supported model!")
         exit()
@@ -21,13 +21,13 @@ def main():
     keras2tpu.prepare(modelName)
     keras2tpu.compile(modelName)
     keras2tpu.copy(modelName)
-    keras2tpu.bench(modelName, batch_size)
-    keras2tpu.retrieveResults()
+    keras2tpu.bench(modelName, batchSize)
+    keras2tpu.retrieveResults(batchSize)
 
     # NCS Pipeline:
     onnx2ncs.prepare(modelName)
-    onnx2ncs.bench(modelName, "CPU", batch_size)
-    onnx2ncs.bench(modelName,"MYRIAD",batch_size)
+    onnx2ncs.bench(modelName, "CPU", batchSize)
+    onnx2ncs.bench(modelName,"MYRIAD",batchSize)
 
     print("FINISHED SUCCESSFULLY!")
 

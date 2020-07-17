@@ -99,8 +99,8 @@ def main():
     exec_net = ie.load_network(network=net, device_name=args.device)
 
     # Start sync inference with time measurement
-    log.info("Starting inference in synchronous mode")
-    times_txt = "results-"+args.device+".txt"
+    log.info("Starting OpenVINO inference...")
+    times_txt = "results-"+args.device+"-{}.txt".format(args.batchsize)
     if os.path.exists(times_txt):
         os.remove(times_txt)
     for i in range(0, args.batchsize):

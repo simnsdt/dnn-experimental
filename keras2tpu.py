@@ -32,10 +32,6 @@ def prepare(name):
             model = tf.keras.applications.VGG19(input_shape=IMG_SHAPE,
                                                         include_top=False,
                                                         weights='imagenet')
-        else:
-            print("Model name {} not supported! Aborting.".format(name))
-            exit()
-
         model.trainable = False
         return model
 
@@ -58,22 +54,23 @@ def prepare(name):
             image = tf.expand_dims(image, 0)
             yield [image]
 
-    # Load keras model:
-    kerasModel = _dlModel()
-    # Convert to quantized tflite:
-    tflite_quant_model = _keras2tflite_quant()
-    # Save quantized model:
-    with open(name+"_quant.tflite", 'wb') as f:
-        f.write(tflite_quant_model)
+    filename = name+"_quant.tflite"
+    if not os.path.isfile(filename):
+        # Load keras model:
+        kerasModel = _dlModel()
+        # Convert to quantized tflite:
+        tflite_quant_model = _keras2tflite_quant()
+        # Save quantized model:
+        with open(filename, 'wb') as f:
+            f.write(tflite_quant_model)
 
 
-def compile(name):
+def compile(modelName):
 # Compiles the model for TPU.
 # Saves the compiled model according to edgetpu_compiler default settings (*_edgtpu.tflite).
-
-# TODO: Implement inference/benchmarking
-    subprocess.run(["edgetpu_compiler", name + "_quant.tflite"])
-
+    filename = modelName+"_edgetpu_quant.tflite"
+    if not os.path.isfile(filename):
+        subprocess.run(["edgetpu_compiler", modelName + "_quant.tflite"])
 
 def copy(modelName):
 # Copy prerequisites to TPU
@@ -82,7 +79,7 @@ def copy(modelName):
     subprocess.run(["mdt", "push", "./tpu/classify.py"])
     subprocess.run(["mdt", "push", "./tpu/install_requirements.sh"])
     subprocess.run(["mdt", "push", modelName+"_quant_edgetpu.tflite"])
-    subprocess.run(["mdt", "exec", "./install_requirements.sh"])
+    subprocess.run(["mdt", "exec", "bash", "./install_requirements.sh"])
 
 
 def bench(modelName,batchSize):
@@ -90,6 +87,6 @@ def bench(modelName,batchSize):
     
     subprocess.run(["mdt", "exec", "python3 ~/classify_image.py --model ~/{} --input ~/sample.jpg -c {}".format(tfliteFilename, batchSize)])
     
-def retrieveResults():
-    subprocess.run(["mdt", "pull", "results-TPU.txt", "./"])
+def retrieveResults(batchSize):
+    subprocess.run(["mdt", "pull", "results-TPU-{}.txt".format(batchSize), "./"])
     
